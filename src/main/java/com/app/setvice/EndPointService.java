@@ -21,7 +21,7 @@ import com.app.model.EndPointResponse;
 @RestController
 public class EndPointService {
 
-	public final String CLIENT_URL = "http://jsonplaceholder.typicode.com/posts";
+	private final String CLIENT_URL = "http://jsonplaceholder.typicode.com/posts";
 
 	@Autowired
 	RestTemplate restTemplate;
