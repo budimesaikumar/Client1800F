@@ -1,4 +1,4 @@
-package com.app.setvice;
+package com.app.external.service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -17,14 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.app.model.EndPointResponse;
+import com.app.service.EndPointService;
 
 @RestController
-public class EndPointService {
+public class EndPointRestService {
 
 	private final String CLIENT_URL = "http://jsonplaceholder.typicode.com/posts";
 
 	@Autowired
 	RestTemplate restTemplate;
+
+	@Autowired
+	EndPointService endPointService;
 
 	@GetMapping("/getCount")
 	public long countEndPoints() {
@@ -40,33 +44,13 @@ public class EndPointService {
 
 	@GetMapping("/getUserId")
 	public Map<Integer, List<EndPointResponse>> getUniqueId() {
-
-		EndPointResponse[] str = srviceCall();
-		Map<Integer, List<EndPointResponse>> response = null;
-		if (str != null) {
-			response = Arrays.asList(str).stream().collect(Collectors.groupingBy(EndPointResponse::getUserId));
-		}
-		return response;
-
+		return endPointService.getUniqueId(srviceCall());
 	}
 
 	@GetMapping("/getUpdate")
 	public Map<Integer, List<EndPointResponse>> update() {
 
-		EndPointResponse[] str = srviceCall();
-		Map<Integer, List<EndPointResponse>> response = null;
-		if (str != null) {
-			response = Arrays.asList(str).stream().collect(Collectors.groupingBy(EndPointResponse::getUserId));
-			Object key = 4;
-			ArrayList<EndPointResponse> list = (ArrayList<EndPointResponse>) response.get(key);
-			list.forEach(value -> {
-				value.setBody("1800Flowers");
-				value.setTitle("1800Flowers");
-			});
-			response.get(key).addAll(list);
-		}
-		return response;
-
+		return endPointService.update(srviceCall());
 	}
 
 	private EndPointResponse[] srviceCall() {
